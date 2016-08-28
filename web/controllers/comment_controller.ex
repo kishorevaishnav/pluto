@@ -10,8 +10,7 @@ defmodule Pluto.CommentController do
   end
 
   def create(conn, %{"ticket_id" => ticket_id, "comment" => comment_params} ) do
-    Logger.debug "--> Ticket ID : #{ticket_id}"
-    Logger.debug "---------------------------------------------"
+    Logger.debug "INSPECT ticket_id ===== #{inspect(ticket_id)}"
     changeset = Comment.changeset(%Comment{}, Map.put(comment_params, "ticket_id", ticket_id))
 
     case Repo.insert(changeset) do
@@ -31,13 +30,13 @@ defmodule Pluto.CommentController do
     # TODO: Need to handle if it doesn't have any records to display or more
     # than one record to display. This works only if there are only one record.
     comment = Repo.get_by!(Comment, ticket_id: ticket_id, id: id)
-    Logger.debug " ****** #{inspect(comment)}"
+    Logger.debug "INSPECT comment ===== #{inspect(comment)}"
     render(conn, "show.json", comment: comment)
   end
 
-  def update(conn, %{"id" => id, "comment" => comment_params}) do
-    comment = Repo.get!(Comment, id)
-    changeset = Comment.changeset(comment, comment_params)
+  def update(conn, %{"ticket_id" => ticket_id, "id" => id, "comment" => comment_params}) do
+    comment = Repo.get_by!(Comment, ticket_id: ticket_id, id: id)
+    changeset = Comment.changeset(comment, Map.put(comment_params, "ticket_id", ticket_id))
 
     case Repo.update(changeset) do
       {:ok, comment} ->
@@ -49,8 +48,8 @@ defmodule Pluto.CommentController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    comment = Repo.get!(Comment, id)
+  def delete(conn, %{"ticket_id" => ticket_id, "id" => id}) do
+    comment = Repo.get_by!(Comment, ticket_id: ticket_id, id: id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).

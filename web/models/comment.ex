@@ -16,10 +16,10 @@ defmodule Pluto.Comment do
   Builds a changeset based on the `struct` and `params`.
   """
   def changeset(struct, params \\ %{}) do
-    Logger.debug "#{inspect(struct, pretty: true)}"
-    Logger.debug "#{inspect(params, pretty: true)}"
-    Logger.debug "#{inspect(@required_fields, pretty: true)}"
-    
+    Logger.debug "INSPECT struct ===== #{inspect(struct, pretty: true)}"
+    Logger.debug "INSPECT params ===== #{inspect(params, pretty: true)}"
+    Logger.debug "INSPECT @required_fields ===== #{inspect(@required_fields, pretty: true)}"
+
     struct
     |> cast(params, @required_fields, @optional_fields)
     # |> validate_required([:value, :ticket_id])
