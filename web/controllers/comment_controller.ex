@@ -4,8 +4,12 @@ defmodule Pluto.CommentController do
 
   alias Pluto.Comment
 
-  def index(conn, _params) do
-    comments = Repo.all(Comment)
+  def index(conn, %{"ticket_id" => tid}) do
+    IO.inspect "-----------------"
+    IO.inspect tid
+    IO.inspect "-----------------"
+    comments = Repo.all(from c in Comment,
+                        where: c.ticket_id == ^tid)
     render(conn, "index.json", comments: comments)
   end
 
