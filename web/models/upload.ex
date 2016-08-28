@@ -9,12 +9,15 @@ defmodule Pluto.Upload do
     timestamps()
   end
 
+  @required_fields ~w(s3_url type type_id)
+  @optional_fields ~w()
+
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:s3_url, :type, :type_id])
-    |> validate_required([:s3_url, :type, :type_id])
+    |> cast(params, @required_fields, @optional_fields)
+    # |> validate_required([:s3_url, :type, :type_id])
   end
 end

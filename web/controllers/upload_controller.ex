@@ -15,7 +15,7 @@ defmodule Pluto.UploadController do
       {:ok, upload} ->
         conn
         |> put_status(:created)
-        |> put_resp_header("location", ticket_upload_path(conn, :show, upload))
+        |> put_resp_header("location", upload_path(conn, :show, :type, :type_id, upload))
         |> render("show.json", upload: upload)
       {:error, changeset} ->
         conn

@@ -23,8 +23,8 @@ defmodule Pluto.Router do
   scope "/api", Pluto do
     pipe_through :api
     resources "/tickets", TicketController, except: [:new, :edit] do
-      resources "/uploads", UploadController, except: [:new, :edit]
       resources "/comments", CommentController, except: [:new, :edit]
     end
+    resources "/uploads/:type/:type_id", UploadController, except: [:new, :edit]
   end
 end
