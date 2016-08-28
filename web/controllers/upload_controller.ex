@@ -51,8 +51,11 @@ defmodule Pluto.UploadController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    upload = Repo.get!(Upload, id)
+  def delete(conn, params) do
+    upload = Repo.one(from u in Upload,
+                       where: u.type == ^params["type"],
+                       where: u.type_id == ^params["type_id"],
+                       where: u.id == ^params["id"])
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
