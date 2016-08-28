@@ -34,8 +34,11 @@ defmodule Pluto.UploadController do
     render(conn, "show.json", upload: upload)
   end
 
-  def update(conn, %{"id" => id, "upload" => upload_params}) do
-    upload = Repo.get!(Upload, id)
+  def update(conn, %{"id" => id, "type" => type, "type_id" => type_id, "upload" => upload_params}) do
+    upload = Repo.one(from u in Upload,
+                       where: u.type == ^type,
+                       where: u.type_id == ^type_id,
+                       where: u.id == ^id)
     changeset = Upload.changeset(upload, upload_params)
 
     case Repo.update(changeset) do
