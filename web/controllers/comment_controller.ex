@@ -1,5 +1,6 @@
 defmodule Pluto.CommentController do
   use Pluto.Web, :controller
+  require Logger
 
   alias Pluto.Comment
 
@@ -8,14 +9,16 @@ defmodule Pluto.CommentController do
     render(conn, "index.json", comments: comments)
   end
 
-  def create(conn, %{"comment" => comment_params}) do
-    changeset = Comment.changeset(%Comment{}, comment_params)
+  def create(conn, %{"ticket_id" => ticket_id, "comment" => comment_params} ) do
+    Logger.debug "--> Ticket ID : #{ticket_id}"
+    Logger.debug "---------------------------------------------"
+    changeset = Comment.changeset(%Comment{}, Map.put(comment_params, "ticket_id", ticket_id))
 
     case Repo.insert(changeset) do
       {:ok, comment} ->
         conn
         |> put_status(:created)
-        |> put_resp_header("location", ticket_comment_path(conn, :show, comment))
+        |> put_resp_header("location", ticket_comment_path(conn, :show, ticket_id, comment))
         |> render("show.json", comment: comment)
       {:error, changeset} ->
         conn

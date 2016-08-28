@@ -1,5 +1,6 @@
 defmodule Pluto.TicketController do
   use Pluto.Web, :controller
+  require Logger
 
   alias Pluto.Ticket
 
@@ -9,6 +10,7 @@ defmodule Pluto.TicketController do
   end
 
   def create(conn, %{"ticket" => ticket_params}) do
+    # Logger.debug "Logging this text!"
     changeset = Ticket.changeset(%Ticket{}, ticket_params)
 
     case Repo.insert(changeset) do

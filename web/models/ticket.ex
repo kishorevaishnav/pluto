@@ -4,6 +4,7 @@ defmodule Pluto.Ticket do
   schema "tickets" do
     field :subject, :string
     field :description, :string
+    has_many :comments, Pluto.Comment
 
     timestamps()
   end
