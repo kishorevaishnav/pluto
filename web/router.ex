@@ -22,6 +22,8 @@ defmodule Pluto.Router do
   # Other scopes may use custom stacks.
   scope "/api", Pluto do
     pipe_through :api
-    resources "/tickets", TicketController, except: [:new, :edit]
+    resources "/tickets", TicketController, except: [:new, :edit] do
+      resources "/uploads", UploadController, except: [:new, :edit]
+    end
   end
 end
