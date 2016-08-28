@@ -3,13 +3,15 @@ defmodule Pluto.UploadController do
 
   alias Pluto.Upload
 
-  def index(conn, _params) do
-    uploads = Repo.all(Upload)
+  def index(conn, params) do
+    uploads = Repo.all(from u in Upload,
+                       where: u.type == ^params["type"],
+                       where: u.type_id == ^params["type_id"])
     render(conn, "index.json", uploads: uploads)
   end
 
-  def create(conn, %{"upload" => upload_params}) do
-    changeset = Upload.changeset(%Upload{}, upload_params)
+  def create(conn, %{"type" => type, "type_id" => type_id, "upload" => upload_params}) do
+    changeset = Upload.changeset(%Upload{}, Map.put(Map.put(upload_params, "type_id", type_id), "type", type))
 
     case Repo.insert(changeset) do
       {:ok, upload} ->
@@ -24,8 +26,11 @@ defmodule Pluto.UploadController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    upload = Repo.get!(Upload, id)
+  def show(conn, params) do
+    upload = Repo.one(from u in Upload,
+                       where: u.type == ^params["type"],
+                       where: u.type_id == ^params["type_id"],
+                       where: u.id == ^params["id"])
     render(conn, "show.json", upload: upload)
   end
 
