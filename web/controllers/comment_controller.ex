@@ -27,8 +27,11 @@ defmodule Pluto.CommentController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    comment = Repo.get!(Comment, id)
+  def show(conn, %{"ticket_id" => ticket_id, "id" => id}) do
+    # TODO: Need to handle if it doesn't have any records to display or more
+    # than one record to display. This works only if there are only one record.
+    comment = Repo.get_by!(Comment, ticket_id: ticket_id, id: id)
+    Logger.debug " ****** #{inspect(comment)}"
     render(conn, "show.json", comment: comment)
   end
 
