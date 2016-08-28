@@ -20,7 +20,8 @@ defmodule Pluto.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Pluto do
-  #   pipe_through :api
-  # end
+  scope "/api", Pluto do
+    pipe_through :api
+    resources "/tickets", TicketController, except: [:new, :edit]
+  end
 end
