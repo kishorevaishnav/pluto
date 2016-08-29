@@ -22,9 +22,12 @@ defmodule Pluto.Router do
   # Other scopes may use custom stacks.
   scope "/api", Pluto do
     pipe_through :api
+    resources "/users", UserController, only: [:index, :show, :create, :update]
+
     resources "/tickets", TicketController, except: [:new, :edit] do
       resources "/comments", CommentController, except: [:new, :edit]
     end
+
     resources "/uploads/:type/:type_id", UploadController, except: [:new, :edit]
   end
 end
