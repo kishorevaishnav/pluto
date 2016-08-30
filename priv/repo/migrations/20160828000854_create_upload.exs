@@ -10,5 +10,6 @@ defmodule Pluto.Repo.Migrations.CreateUpload do
       timestamps()
     end
 
+    create unique_index(:uploads, [:s3_url])
   end
 end

@@ -23,6 +23,7 @@ defmodule Pluto.Router do
   scope "/api", Pluto do
     pipe_through :api
     resources "/users", UserController, only: [:index, :show, :create, :update]
+    post "/users/authenticate", UserController, :authenticate
 
     resources "/tickets", TicketController, except: [:new, :edit] do
       resources "/comments", CommentController, except: [:new, :edit]

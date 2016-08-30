@@ -5,7 +5,7 @@ defmodule Pluto.User do
     field :username, :string
     field :email, :string
     field :password_digest, :string
-    field :status, :string
+    field :status, :string 
     field :reference_id, :string
     field :role, :string
     field :sessionid, :string
@@ -13,12 +13,13 @@ defmodule Pluto.User do
     timestamps()
   end
 
+  @required_fields ~w(username email password_digest)
+  @optional_fields ~w(status reference_id role sessionid)
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:username, :email, :password_digest, :status, :reference_id, :role, :sessionid])
-    |> validate_required([:username, :email, :password_digest, :status, :reference_id, :role, :sessionid])
+    |> cast(params, @required_fields, @optional_fields)
   end
 end

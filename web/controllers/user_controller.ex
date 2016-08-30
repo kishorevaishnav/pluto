@@ -3,6 +3,15 @@ defmodule Pluto.UserController do
 
   alias Pluto.User
 
+  def authenticate(conn, %{"user" => user_params}) do
+    query = (from user in User,
+            where: user.username == ^user_params["username"],
+            where: user.password_digest == ^user_params["password_digest"],
+            select: user)
+    user = Repo.one(query)
+    render(conn, "show.json", user: user)
+  end
+
   def index(conn, _params) do
     users = Repo.all(User)
     render(conn, "index.json", users: users)

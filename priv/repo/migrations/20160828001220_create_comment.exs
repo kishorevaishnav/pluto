@@ -8,7 +8,7 @@ defmodule Pluto.Repo.Migrations.CreateComment do
 
       timestamps()
     end
-    create index(:comments, [:ticket_id])
 
+    create index(:comments, [:ticket_id])
   end
 end
