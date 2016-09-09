@@ -9,6 +9,12 @@ defmodule Pluto.UserController do
             where: user.password_digest == ^user_params["password_digest"],
             select: user)
     user = Repo.one(query)
+    user = if :nil != user and :nil == user.sessionid do
+      User.changeset(user, %{"sessionid" => random_string(64)}) |> Repo.update
+      Repo.one(query)
+    else
+      user
+    end
     render(conn, "show.json", user: user)
   end
 
@@ -61,4 +67,9 @@ defmodule Pluto.UserController do
 
     send_resp(conn, :no_content, "")
   end
+
+  defp random_string(length) do
+    :crypto.strong_rand_bytes(length) |> Base.url_encode64 |> binary_part(0, length)
+  end
+
 end
