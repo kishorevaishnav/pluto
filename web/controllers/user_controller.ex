@@ -10,7 +10,8 @@ defmodule Pluto.UserController do
             select: user)
     user = Repo.one(query)
     user = if :nil != user and :nil == user.sessionid do
-      User.changeset(user, %{"sessionid" => random_string(64)}) |> Repo.update
+      User.changeset(user, %{"sessionid" => random_string(64)})
+      |> Repo.update
       Repo.one(query)
     else
       user
@@ -18,9 +19,22 @@ defmodule Pluto.UserController do
     render(conn, "show.json", user: user)
   end
 
-  def index(conn, _params) do
-    users = Repo.all(User)
-    render(conn, "index.json", users: users)
+  def index(conn, %{"sessionid" => sessionid}) do
+    query = (from user in User,
+            where: user.sessionid == ^sessionid,
+            select: user)
+    user = Repo.one(query)
+    if :nil == user do
+      conn
+      |> put_status(404)
+      |> render(Pluto.UserView, "error.json", %{
+        error: "resource not found",
+        error_code: 404
+      })
+    else
+      users = Repo.all(User)
+      render(conn, "index.json", users: users)
+    end
   end
 
   def create(conn, %{"user" => user_params}) do
@@ -39,9 +53,22 @@ defmodule Pluto.UserController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
-    render(conn, "show.json", user: user)
+  def show(conn, %{"id" => id, "sessionid" => sessionid}) do
+    query = (from user in User,
+            where: user.sessionid == ^sessionid,
+            select: user)
+    user = Repo.one(query)
+    if :nil == user do
+      conn
+      |> put_status(404)
+      |> render(Pluto.UserView, "error.json", %{
+        error: "resource not found",
+        error_code: 404
+      })
+    else
+      user = Repo.get!(User, id)
+      render(conn, "show.json", user: user)
+    end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
@@ -69,7 +96,9 @@ defmodule Pluto.UserController do
   end
 
   defp random_string(length) do
-    :crypto.strong_rand_bytes(length) |> Base.url_encode64 |> binary_part(0, length)
+    :crypto.strong_rand_bytes(length)
+    |> Base.url_encode64
+    |> binary_part(0, length)
   end
 
 end

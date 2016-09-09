@@ -9,6 +9,13 @@ defmodule Pluto.UserView do
     %{data: render_one(user, Pluto.UserView, "user.json")}
   end
 
+  def render("error.json", _assigns) do
+    %{
+      error: "resource not found",
+      error_code: 404
+    }
+  end
+
   def render("user.json", %{user: user}) do
     %{id: user.id,
       username: user.username,
